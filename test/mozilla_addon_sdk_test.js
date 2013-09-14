@@ -41,8 +41,8 @@ exports.mozilla_addon_sdk = {
   xpi: function (test) {
     test.expect(1);
 
-    var xpi_build = path.resolve("tmp", "build", "test-addon.xpi");
-    test.ok(grunt.file.exists(xpi_build), "test-addon.xpi should be built into 'tmp/build'");
+    var xpi_build = path.resolve("tmp", "dist", "test-addon.xpi");
+    test.ok(grunt.file.exists(xpi_build), "test-addon.xpi should be built into 'tmp/dist'");
 
     test.done();
   }

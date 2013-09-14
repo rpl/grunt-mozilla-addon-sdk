@@ -34,7 +34,7 @@ function xpi(grunt, options) {
   var sdk_dir = path.resolve(grunt.config('mozilla-addon-sdk').download.options.dest_dir,
                              "addon-sdk");
   var ext_dir = path.resolve(options.extension_dir);
-  var build_dir = path.resolve(options.build_dir);
+  var dist_dir = path.resolve(options.dist_dir);
   var completed = Q.defer();
   var xpi_script = path.resolve(__dirname, '..', 'scripts', 'xpi.sh');
 
@@ -52,9 +52,9 @@ function xpi(grunt, options) {
     return completed.promise;
   }
 
-  grunt.log.writeln("Creating build dir '" + build_dir + "'...");
+  grunt.log.writeln("Creating dist dir '" + dist_dir + "'...");
 
-  grunt.file.mkdir(build_dir);
+  grunt.file.mkdir(dist_dir);
 
   grunt.log.writeln("Creating xpi...");
 
@@ -86,7 +86,7 @@ function xpi(grunt, options) {
       }
 
       mv(path.resolve(xpi_files[0]),
-         path.resolve(build_dir, path.basename(xpi_files[0])),
+         path.resolve(dist_dir, path.basename(xpi_files[0])),
          completed.resolve);
     }
   });
@@ -170,7 +170,7 @@ module.exports = function(grunt) {
       break;
     case "xpi":
       grunt.config.requires("mozilla-addon-sdk.xpi.options.extension_dir");
-      grunt.config.requires("mozilla-addon-sdk.xpi.options.build_dir");
+      grunt.config.requires("mozilla-addon-sdk.xpi.options.dist_dir");
       xpi(grunt, options).then(done);
       break;
     }

@@ -34,7 +34,7 @@ module.exports = function(grunt) {
       xpi: {
         options: {
           extension_dir: "test/fixtures/test-addon",
-          build_dir: "tmp/build"
+          dist_dir: "tmp/dist"
         }
       }
     },
