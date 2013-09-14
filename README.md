@@ -17,19 +17,24 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
 ```
 
-## The "mozilla_addon_sdk" task
+## The "mozilla-addon-sdk" tasks
 
 ### Overview
-In your project's Gruntfile, add a section named `mozilla_addon_sdk` to the data object passed into `grunt.initConfig()`.
+In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data object passed into `grunt.initConfig()`.
 
 ```js
 grunt.initConfig({
-  mozilla_addon_sdk: {
-    options: {
-      // Task-specific options go here.
-    },
-    your_target: {
-      // Target-specific file lists and/or options go here.
+  "mozilla-addon-sdk": {
+    download: {
+      options: {
+        revision: "firefox26"
+      },
+    }
+    xpi: {
+      options: {
+        extension_dir: "ff_extension",
+        dist_dir: "tmp/dist"
+      }
     },
   },
 })
@@ -37,53 +42,48 @@ grunt.initConfig({
 
 ### Options
 
-#### options.separator
+#### download.options.revision
 Type: `String`
-Default value: `',  '`
+Default value: `'master'`
 
-A string value that is used to do something with whatever.
+A string value that is used as the Mozilla Addon SDK revision to download and use to
+build addon xpi.
 
-#### options.punctuation
+#### xpi.options.extension_dir
 Type: `String`
-Default value: `'.'`
+Default value: `null`
 
-A string value that is used to do something else with whatever else.
+A string value that is used as the path which contains the addon extension to build.
+
+#### xpi.options.dist_dir
+Type: `String`
+Default value: `null`
+
+A string value that is used as the path where the generated addon xpi should be moved.
 
 ### Usage Examples
 
-#### Default Options
-In this example, the default options are used to do something with whatever. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result would be `Testing, 1 2 3.`
+#### Download and unpack Mozilla Addon SDK:
 
-```js
-grunt.initConfig({
-  mozilla_addon_sdk: {
-    options: {},
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
+```
+$ grunt mozilla-addon-sdk:download
+Running "mozilla-addon-sdk:download" (mozilla-addon-sdk) task
+Downloading: https://github.com/mozilla/addon-sdk/archive/master.tar.gz
+
+Done, without errors.
 ```
 
-#### Custom Options
-In this example, custom options are used to do something else with whatever else. So if the `testing` file has the content `Testing` and the `123` file had the content `1 2 3`, the generated result in this case would be `Testing: 1 2 3 !!!`
+#### Generate addon XPI
 
-```js
-grunt.initConfig({
-  mozilla_addon_sdk: {
-    options: {
-      separator: ': ',
-      punctuation: ' !!!',
-    },
-    files: {
-      'dest/default_options': ['src/testing', 'src/123'],
-    },
-  },
-})
 ```
+$ grunt mozilla-addon-sdk:xpi
+Running "mozilla-addon-sdk:xpi" (mozilla-addon-sdk) task
+Creating dist dir '/home/rpl/PROJECTS/MOZILLA/grunt-mozilla-addon-sdk/tmp/dist'...
+Creating xpi...
 
-## Contributing
-In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+Done, without errors.
+```
 
 ## Release History
-_(Nothing yet)_
+
+- 0.1.0 - initial release (download and xpi sub-tasks)
