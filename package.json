@@ -1,0 +1,49 @@
+{
+  "name": "grunt-mozilla-addon-sdk",
+  "description": "Download and Run Mozilla Addon SDK",
+  "version": "0.1.0",
+  "homepage": "https://github.com/rpl/grunt-mozilla-addon-sdk",
+  "author": {
+    "name": "Luca Greco",
+    "email": "luca.greco@alcacoop.it",
+    "url": "http://ubik.cc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rpl/grunt-mozilla-addon-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rpl/grunt-mozilla-addon-sdk/issues"
+  },
+  "licenses": [
+    {
+      "type": "MPL",
+      "url": "https://github.com/rpl/grunt-mozilla-addon-sdk/blob/master/LICENSE"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "dependencies": {
+    "request": "~2.27.0",
+    "q": "~0.9.7",
+    "tar.gz": "~0.1.1",
+    "mv": "~1.0.0"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
