@@ -36,7 +36,8 @@ function xpi(grunt, options) {
   var ext_dir = path.resolve(options.extension_dir);
   var dist_dir = path.resolve(options.dist_dir);
   var completed = Q.defer();
-  var xpi_script = path.resolve(__dirname, '..', 'scripts', 'xpi.sh');
+  var scriptFilename = process.platform.match(/^win/) ? 'xpi.bat' : 'xpi.sh';
+  var xpi_script = path.resolve(__dirname, '..', 'scripts', scriptFilename);
 
   var package_json = path.resolve(ext_dir, "package.json");
   var error;
