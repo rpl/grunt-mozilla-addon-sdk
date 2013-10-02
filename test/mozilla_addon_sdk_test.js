@@ -45,5 +45,12 @@ exports.mozilla_addon_sdk = {
     test.ok(grunt.file.exists(xpi_build), "test-addon.xpi should be built into 'tmp/dist'");
 
     test.done();
+  },
+  custom_cmd: function(test) {
+    test.expect(1);
+
+    var test_result_file = path.resolve("tmp", "test_run.txt");
+    test.ok(grunt.file.exists(test_result_file), "grunt mozilla-cfx:custom_cmd should run addon unit tests");
+    test.done();
   }
 };

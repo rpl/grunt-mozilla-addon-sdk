@@ -25,18 +25,17 @@ var defaults = {
   },
   xpi: {
     options: {
+      arguments: null,
       extension_dir: null
     }
   }
 };
 
-function xpi(grunt, options) {
+function cfx(grunt, ext_dir, cfx_cmd, cfx_args) {
   var sdk_dir = path.resolve(grunt.config('mozilla-addon-sdk').download.options.dest_dir,
                              "addon-sdk");
-  var ext_dir = path.resolve(options.extension_dir);
-  var dist_dir = path.resolve(options.dist_dir);
   var completed = Q.defer();
-  var scriptFilename = process.platform.match(/^win/) ? 'xpi.bat' : 'xpi.sh';
+  var scriptFilename = process.platform.match(/^win/) ? 'cfx.bat' : 'cfx.sh';
   var xpi_script = path.resolve(__dirname, '..', 'scripts', scriptFilename);
 
   var package_json = path.resolve(ext_dir, "package.json");
@@ -47,11 +46,37 @@ function xpi(grunt, options) {
   }
 
   if (error) {
-    grunt.log.error(error);
-    grunt.fail.warn('There was an error while generating xpi.');
     completed.reject(error);
     return completed.promise;
   }
+
+  grunt.log.debug(["Running cfx", cfx_cmd, cfx_args].join(' '));
+
+  grunt.util.spawn({
+    cmd: xpi_script,
+    opts: grunt.option("debug") ? {stdio: 'inherit'} : {},
+    args: [
+      sdk_dir,
+      ext_dir,
+      cfx_cmd,
+      cfx_args
+    ],
+  }, function (error, result, code) {
+    if (error) {
+      completed.reject(error);
+    } else {
+      completed.resolve();
+    }
+  });
+
+  return completed.promise;
+}
+
+function xpi(grunt, options) {
+  var ext_dir = path.resolve(options.extension_dir);
+  var dist_dir = path.resolve(options.dist_dir);
+  var cfx_args = options.arguments;
+  var completed = Q.defer();
 
   grunt.log.writeln("Creating dist dir '" + dist_dir + "'...");
 
@@ -59,25 +84,12 @@ function xpi(grunt, options) {
 
   grunt.log.writeln("Creating xpi...");
 
-  grunt.util.spawn({
-    cmd: xpi_script,
-    args: [
-      sdk_dir,
-      ext_dir
-    ],
-    opts: []
-  }, function (error, result, code) {
-    if (error) {
-      grunt.log.error(error);
-      grunt.fail.warn('There was an error while generating xpi.');
-      completed.reject(error);
-    } else {
+  cfx(grunt, ext_dir, "xpi", cfx_args).
+    then(function () {
       var xpi_files = grunt.file.expand(options.extension_dir + "/*.xpi");
 
       if (xpi_files.length === 0) {
         var no_xpi_error = new Error("no xpi found");
-        grunt.log.error(no_xpi_error);
-        grunt.fail.warn('There was an error while generating xpi.');
         completed.reject(no_xpi_error);
         return;
       }
@@ -86,11 +98,17 @@ function xpi(grunt, options) {
         grunt.log.warn('There was more than one xpi: ', xpi_files);
       }
 
+      var dist_xpi = path.resolve(dist_dir, path.basename(xpi_files[0]));
       mv(path.resolve(xpi_files[0]),
-         path.resolve(dist_dir, path.basename(xpi_files[0])),
-         completed.resolve);
-    }
-  });
+         dist_xpi,
+         function () {
+           grunt.log.writeln("Generated XPI:", dist_xpi);
+           completed.resolve();
+         });
+    }).
+    catch(function (error) {
+      completed.reject(error);
+    });
 
   return completed.promise;
 }
@@ -167,13 +185,39 @@ module.exports = function(grunt) {
 
     switch (this.target) {
     case "download":
-      download(grunt, options).then(done);
+      download(grunt, options).
+        then(done).
+        catch(function (error) {
+          grunt.fail.warn('There was an error running mozilla-addon-sdk:download. ' + error);
+          done();
+        });
       break;
     case "xpi":
       grunt.config.requires("mozilla-addon-sdk.xpi.options.extension_dir");
       grunt.config.requires("mozilla-addon-sdk.xpi.options.dist_dir");
-      xpi(grunt, options).then(done);
+      xpi(grunt, options).
+        then(done).
+        catch(function (error) {
+          grunt.fail.warn('There was an error running mozilla-addon-sdk:xpi. ' + error);
+          done();
+        });
       break;
     }
+  });
+
+  grunt.registerMultiTask('mozilla-cfx', 'Run Mozilla Addon SDK command line tool', function() {
+    var options = this.options();
+    var done = this.async();
+
+    grunt.config.requires(["mozilla-cfx",this.target,"options","extension_dir"].join('.'));
+    grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));
+
+    cfx(grunt, path.resolve(options.extension_dir),
+        options.command, options.arguments).
+      then(done).
+      catch(function (error) {
+        grunt.fail.warn('There was an error running mozilla-cfx. ' + error);
+        done();
+      });
   });
 };

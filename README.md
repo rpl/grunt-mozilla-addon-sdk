@@ -27,7 +27,7 @@ grunt.initConfig({
   "mozilla-addon-sdk": {
     download: {
       options: {
-        revision: "firefox26"
+        revision: "1.14"
       },
     }
     xpi: {
@@ -36,7 +36,25 @@ grunt.initConfig({
         dist_dir: "tmp/dist"
       }
     },
+  }
+});
+
+Custom cfx command could be defined using a section named `mozilla-cfx`:
+
+```js
+grunt.initConfig({
+  "mozilla-addon-sdk": {
+    ...
   },
+  "mozilla-cfx": {
+    custom_command: {
+      options: {
+        extension_dir: "ff_extension",
+        command: "run",
+        arguments: "-b /usr/bin/firefox-nightly"
+      }
+    }
+  }
 })
 ```
 
@@ -86,4 +104,5 @@ Done, without errors.
 
 ## Release History
 
+- 0.2.0 - added windows support and custom cfx command using 'mozilla-cfx' grunt multi-task
 - 0.1.0 - initial release (download and xpi sub-tasks)
