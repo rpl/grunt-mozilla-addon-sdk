@@ -51,16 +51,18 @@ function cfx(grunt, ext_dir, cfx_cmd, cfx_args) {
   }
 
   grunt.log.debug(["Running cfx", cfx_cmd, cfx_args].join(' '));
-
+  
+  var args = [
+      sdk_dir,
+      ext_dir,
+      cfx_cmd
+    ];
+  if (cfx_args) args.push(cfx_args);
+  
   grunt.util.spawn({
     cmd: xpi_script,
     opts: grunt.option("debug") ? {stdio: 'inherit'} : {},
-    args: [
-      sdk_dir,
-      ext_dir,
-      cfx_cmd,
-      cfx_args
-    ],
+    args: args,
   }, function (error, result, code) {
     if (error) {
       completed.reject(error);
