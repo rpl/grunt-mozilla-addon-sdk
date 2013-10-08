@@ -8,10 +8,13 @@ var currDir = Cc["@mozilla.org/file/directory_service;1"]
                 .getFile("CurWorkD", {}).path;
 
 exports["test ok"] = function(assert) {
-  /* sdk/io/file works bad with '..' symbols on windows, 
-  so we go up to root folder using regex */  
-  var rootRepositoryDir = currDir.replace(/(\\|\/)(?:[^\\1]+\1?){3}$/, "");
-	
+  var rootRepositoryDir = currDir;
+  // WORKAROUND: using '..' in file.join on windows doesn't work correctly
+  // workaround in a cross-platform way using file.dirname
+  for (let i=0; i<3; i++) {
+    rootRepositoryDir = file.dirname(rootRepositoryDir);
+  }
+
   fh = file.open(file.join(rootRepositoryDir, "tmp", "test_run.txt"), "w");
   fh.write("OK");
   fh.close();
