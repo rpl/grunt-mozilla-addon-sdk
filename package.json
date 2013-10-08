@@ -8,6 +8,11 @@
     "email": "luca.greco@alcacoop.it",
     "url": "http://ubik.cc"
   },
+  "contributors": [
+    {
+      "name": "Oleg Shevchenko (https://github.com/olsh)"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git://github.com/rpl/grunt-mozilla-addon-sdk.git"
