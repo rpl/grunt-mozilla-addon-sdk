@@ -2,7 +2,10 @@ cd %1
 call bin\activate
 cd %2
 SET COMMAND=%3
-cfx %COMMAND% %*
+
+SHIFT
+SHIFT
+SHIFT
 
 SET args=
 :LOOP
