@@ -30,9 +30,24 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     'mozilla-addon-sdk': {
-      download: { options: { revision: "1.14" } }, // use 1.14 tag
-      xpi: {
+      '1.14': {
         options: {
+          revision: "1.14"
+        }
+      },
+      'master': {
+        options: {
+          revision: "master",
+          github: true
+        }
+      }
+    },
+
+    // custom cfx xpi
+    'mozilla-cfx-xpi': {
+      'release': {
+        options: {
+          "mozilla-addon-sdk": "1.14",
           extension_dir: "test/fixtures/test-addon",
           dist_dir: "tmp/dist"
         }
@@ -43,6 +58,7 @@ module.exports = function(grunt) {
     'mozilla-cfx': {
       custom_cmd: {
         options: {
+          "mozilla-addon-sdk": "1.14",
           extension_dir: "test/fixtures/test-addon",
           command: 'test'
         }
@@ -66,7 +82,7 @@ module.exports = function(grunt) {
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
-  grunt.registerTask('test', ['clean', 'mozilla-addon-sdk', 'mozilla-cfx', 'nodeunit']);
+  grunt.registerTask('test', ['clean', 'mozilla-addon-sdk', 'mozilla-cfx-xpi', 'mozilla-cfx', 'nodeunit']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);
