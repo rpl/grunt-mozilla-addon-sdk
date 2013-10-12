@@ -33,7 +33,7 @@ exports.mozilla_addon_sdk = {
 
     var addon_sdk_dirs = [
       path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-1.14-official"),
-      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-master-github")
+      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-master-github-mozilla")
     ];
 
     addon_sdk_dirs.forEach(function(addon_sdk_dir) {

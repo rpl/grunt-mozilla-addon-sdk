@@ -38,7 +38,8 @@ module.exports = function(grunt) {
       'master': {
         options: {
           revision: "master",
-          github: true
+          github: true,
+          // github_user: "mozilla" // default
         }
       }
     },

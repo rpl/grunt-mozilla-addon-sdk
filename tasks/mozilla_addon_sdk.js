@@ -15,8 +15,8 @@ var path = require('path'),
     targz = require('tar.gz'),
     mv = require('mv');
 
-var BASE_GITHUB_URL = "https://github.com/mozilla/addon-sdk/archive",
-    BASE_OFFICIAL_URL = "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack",
+var BASE_OFFICIAL_URL = "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack",
+    DEFAULT_GITHUB_USER = "mozilla",
     DEFAULT_DEST_DIR = path.join("tmp", "mozilla-addon-sdk");
 
 function get_download_type(download_options) {
@@ -30,7 +30,15 @@ function get_download_type(download_options) {
 }
 
 function get_downloaded_dirname(download_options) {
-  return "addon-sdk-" + download_options.revision + "-" + get_download_type(download_options);
+  var type = get_download_type(download_options);
+  var suffix = "";
+
+  if (type == "github") {
+    var user = download_options.github_user ? download_options.github_user : DEFAULT_GITHUB_USER;
+    suffix = "-" + user;
+  }
+
+  return "addon-sdk-" + download_options.revision + "-" + type + suffix;
 }
 
 function get_download_url(download_options) {
@@ -39,7 +47,8 @@ function get_download_url(download_options) {
     return download_options.download_url;
     break;
   case "github":
-    return [BASE_GITHUB_URL, download_options.revision].join("/") + ".tar.gz";
+    return ["https://github.com", download_options.github_user || DEFAULT_GITHUB_USER,
+            "addon-sdk", "archive", download_options.revision].join("/") + ".tar.gz";
     break;
   case "official":
     return [BASE_OFFICIAL_URL, "addon-sdk-" + download_options.revision].join("/") + ".tar.gz";
