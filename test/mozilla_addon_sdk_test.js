@@ -29,13 +29,20 @@ exports.mozilla_addon_sdk = {
     done();
   },
   download: function(test) {
-    test.expect(3);
+    test.expect(6);
 
-    var addon_sdk_dir = path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk");
-    test.ok(grunt.file.exists(addon_sdk_dir), "addon-sdk should be downloaded into 'tmp/addon-sdk'");
-    test.ok(grunt.file.isDir(addon_sdk_dir), "addon-sdk should be a directory");
-    test.ok(grunt.file.isFile(path.resolve(addon_sdk_dir, "bin", "activate")),
-                              "addon-sdk should contains 'bin/active' file");
+    var addon_sdk_dirs = [
+      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-1.14-official"),
+      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-master-github-mozilla")
+    ];
+
+    addon_sdk_dirs.forEach(function(addon_sdk_dir) {
+      test.ok(grunt.file.exists(addon_sdk_dir), "addon-sdk should be downloaded into " + addon_sdk_dir);
+      test.ok(grunt.file.isDir(addon_sdk_dir), "should be a directory");
+      test.ok(grunt.file.isFile(path.resolve(addon_sdk_dir, "bin", "activate")),
+              "should contains 'bin/active' file");
+    });
+
     test.done();
   },
   xpi: function (test) {

@@ -15,25 +15,54 @@ var path = require('path'),
     targz = require('tar.gz'),
     mv = require('mv');
 
-var defaults = {
-  download: {
-    options: {
-      revision: "master",
-      base_download_url: "https://github.com/mozilla/addon-sdk/archive",
-      dest_dir: "./tmp/mozilla-addon-sdk"
-    }
-  },
-  xpi: {
-    options: {
-      arguments: null,
-      extension_dir: null
-    }
-  }
-};
+var BASE_OFFICIAL_URL = "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack",
+    DEFAULT_GITHUB_USER = "mozilla",
+    DEFAULT_DEST_DIR = path.join("tmp", "mozilla-addon-sdk");
 
-function cfx(grunt, ext_dir, cfx_cmd, cfx_args) {
-  var sdk_dir = path.resolve(grunt.config('mozilla-addon-sdk').download.options.dest_dir,
-                             "addon-sdk");
+function get_download_type(download_options) {
+  if (download_options.download_url) {
+    return "custom";
+  } else if (download_options.github) {
+    return "github";
+  } else {
+    return "official";
+  }
+}
+
+function get_downloaded_dirname(download_options) {
+  var type = get_download_type(download_options);
+  var suffix = "";
+
+  if (type == "github") {
+    var user = download_options.github_user ? download_options.github_user : DEFAULT_GITHUB_USER;
+    suffix = "-" + user;
+  }
+
+  return "addon-sdk-" + download_options.revision + "-" + type + suffix;
+}
+
+function get_download_url(download_options) {
+  switch (get_download_type(download_options)) {
+  case "custom":
+    return download_options.download_url;
+    break;
+  case "github":
+    return ["https://github.com", download_options.github_user || DEFAULT_GITHUB_USER,
+            "addon-sdk", "archive", download_options.revision].join("/") + ".tar.gz";
+    break;
+  case "official":
+    return [BASE_OFFICIAL_URL, "addon-sdk-" + download_options.revision].join("/") + ".tar.gz";
+    break;
+  }
+
+  return null;
+}
+
+function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args) {
+  var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
+  var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
+  var sdk_dir = path.resolve(dest_dir,
+                             get_downloaded_dirname(download_options));
   var completed = Q.defer();
   var scriptFilename = process.platform.match(/^win/) ? 'cfx.bat' : 'cfx.sh';
   var xpi_script = path.resolve(__dirname, '..', 'scripts', scriptFilename);
@@ -51,14 +80,14 @@ function cfx(grunt, ext_dir, cfx_cmd, cfx_args) {
   }
 
   grunt.log.debug(["Running cfx", cfx_cmd, cfx_args].join(' '));
-  
+
   var args = [
       sdk_dir,
       ext_dir,
       cfx_cmd
     ];
   if (cfx_args) args.push(cfx_args);
-  
+
   grunt.util.spawn({
     cmd: xpi_script,
     opts: grunt.option("debug") ? {stdio: 'inherit'} : {},
@@ -86,7 +115,7 @@ function xpi(grunt, options) {
 
   grunt.log.writeln("Creating xpi...");
 
-  cfx(grunt, ext_dir, "xpi", cfx_args).
+  cfx(grunt, options['mozilla-addon-sdk'], ext_dir, "xpi", cfx_args).
     then(function () {
       var xpi_files = grunt.file.expand(options.extension_dir + "/*.xpi");
 
@@ -118,31 +147,35 @@ function xpi(grunt, options) {
 function download(grunt, options) {
   var completed = Q.defer();
 
-  if (grunt.file.exists(path.resolve(options.dest_dir, "addon-sdk"))) {
+  var downloaded_dirname = get_downloaded_dirname(options);
+
+  var dest_dir = options.dest_dir || DEFAULT_DEST_DIR;
+
+  if (grunt.file.exists(path.resolve(dest_dir, downloaded_dirname))) {
     grunt.log.writeln("Mozilla Addon SDK already downloaded");
     completed.resolve();
     return completed.promise;
   }
 
-  grunt.file.mkdir(options.dest_dir);
+  grunt.file.mkdir(dest_dir);
 
-  var destFilePath = path.resolve(options.dest_dir, "archive.tar.gz"),
+  var destFilePath = path.resolve(dest_dir, downloaded_dirname + ".tar.gz"),
       destFileStream = fs.createWriteStream(destFilePath),
-      downloadUrl = [options.base_download_url, options.revision + ".tar.gz"].join("/"),
+      downloadUrl = get_download_url(options),
       downloadRequest = request(downloadUrl);
 
   grunt.log.writeln('Downloading: ' + downloadUrl);
 
   destFileStream.on('close', function() {
-    new targz().extract(destFilePath, options.dest_dir, function (error) {
+    new targz().extract(destFilePath, dest_dir, function (error) {
       grunt.file.delete(destFilePath);
       if (error) {
         grunt.log.error(error);
         grunt.fail.warn('There was an error while extracting.');
         completed.reject(error);
       } else {
-        mv(path.resolve(options.dest_dir, "addon-sdk-" + options.revision),
-                      path.resolve(options.dest_dir, "addon-sdk"), completed.resolve);
+        mv(path.resolve(dest_dir, "addon-sdk-" + options.revision),
+                      path.resolve(dest_dir, downloaded_dirname), completed.resolve);
       }
     });
   });
@@ -165,56 +198,57 @@ function download(grunt, options) {
 }
 
 module.exports = function(grunt) {
-  var config = grunt.config.get();
-
-  if (!config.hasOwnProperty('mozilla-addon-sdk')) {
-    // put defaults
-    grunt.config('mozilla-addon-sdk', defaults);
-  } else {
-    // merge defaults
-    var options = {};
-    grunt.util._.merge(options, defaults);
-    grunt.util._.merge(options, grunt.config('mozilla-addon-sdk'));
-    grunt.config('mozilla-addon-sdk', options);
-  }
-
-  // reload config
-  config = grunt.config.get();
-
-  grunt.registerMultiTask('mozilla-addon-sdk', 'Download and Run Mozilla Addon SDK', function() {
+  grunt.registerMultiTask('mozilla-addon-sdk', 'Download Mozilla Addon SDK', function() {
     var options = this.options();
     var done = this.async();
 
-    switch (this.target) {
-    case "download":
-      download(grunt, options).
-        then(done).
-        catch(function (error) {
-          grunt.fail.warn('There was an error running mozilla-addon-sdk:download. ' + error);
-          done();
-        });
-      break;
-    case "xpi":
-      grunt.config.requires("mozilla-addon-sdk.xpi.options.extension_dir");
-      grunt.config.requires("mozilla-addon-sdk.xpi.options.dist_dir");
-      xpi(grunt, options).
-        then(done).
-        catch(function (error) {
-          grunt.fail.warn('There was an error running mozilla-addon-sdk:xpi. ' + error);
-          done();
-        });
-      break;
+    if (this.target.lastIndexOf('.') > 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
     }
+
+    grunt.config.requires(["mozilla-addon-sdk",this.target,"options","revision"].join('.'));
+
+    download(grunt, options).
+      then(done).
+      catch(function (error) {
+        grunt.fail.warn('There was an error downloading mozilla-addon-sdk ' + this.target + '.'
+                        + error);
+        done();
+      });
+  });
+
+  grunt.registerMultiTask('mozilla-cfx-xpi', 'Create an XPI package', function() {
+    var options = this.options();
+    var done = this.async();
+
+    if (this.target.lastIndexOf('.') >= 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
+    }
+
+    grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","extension_dir"].join('.'));
+    grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","dist_dir"].join('.'));
+    grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","mozilla-addon-sdk"].join('.'));
+
+    xpi(grunt, options).
+      then(done).
+      catch(function (error) {
+          grunt.fail.warn('There was an error running mozilla-cfx-xpi. ' + error);
+          done();
+      });
   });
 
   grunt.registerMultiTask('mozilla-cfx', 'Run Mozilla Addon SDK command line tool', function() {
     var options = this.options();
     var done = this.async();
 
+    if (this.target.lastIndexOf('.') >= 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
+    }
+
     grunt.config.requires(["mozilla-cfx",this.target,"options","extension_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));
 
-    cfx(grunt, path.resolve(options.extension_dir),
+    cfx(grunt, options['mozilla-addon-sdk'], path.resolve(options.extension_dir),
         options.command, options.arguments).
       then(done).
       catch(function (error) {
