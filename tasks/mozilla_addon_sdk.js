@@ -202,6 +202,12 @@ module.exports = function(grunt) {
     var options = this.options();
     var done = this.async();
 
+    if (this.target.lastIndexOf('.') > 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
+    }
+
+    grunt.config.requires(["mozilla-addon-sdk",this.target,"options","revision"].join('.'));
+
     download(grunt, options).
       then(done).
       catch(function (error) {
@@ -214,6 +220,10 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('mozilla-cfx-xpi', 'Create an XPI package', function() {
     var options = this.options();
     var done = this.async();
+
+    if (this.target.lastIndexOf('.') >= 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
+    }
 
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","extension_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","dist_dir"].join('.'));
@@ -230,6 +240,10 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('mozilla-cfx', 'Run Mozilla Addon SDK command line tool', function() {
     var options = this.options();
     var done = this.async();
+
+    if (this.target.lastIndexOf('.') >= 0) {
+      grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
+    }
 
     grunt.config.requires(["mozilla-cfx",this.target,"options","extension_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));

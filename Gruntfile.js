@@ -30,7 +30,7 @@ module.exports = function(grunt) {
 
     // Configuration to be run (and then tested).
     'mozilla-addon-sdk': {
-      '1.14': {
+      '1_14': {
         options: {
           revision: "1.14"
         }
@@ -48,7 +48,7 @@ module.exports = function(grunt) {
     'mozilla-cfx-xpi': {
       'release': {
         options: {
-          "mozilla-addon-sdk": "1.14",
+          "mozilla-addon-sdk": "1_14",
           extension_dir: "test/fixtures/test-addon",
           dist_dir: "tmp/dist"
         }
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
     'mozilla-cfx': {
       custom_cmd: {
         options: {
-          "mozilla-addon-sdk": "1.14",
+          "mozilla-addon-sdk": "1_14",
           extension_dir: "test/fixtures/test-addon",
           command: 'test',
           // arguments: '-b /usr/local/bin/firefox-nightly -p /tmp/PROFILE_REUSED'
