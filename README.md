@@ -25,7 +25,7 @@ In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data
 ```js
 grunt.initConfig({
   "mozilla-addon-sdk": {
-    '1.14': {
+    '1_14': {
       options: {
         revision: "1.14"
       }
@@ -41,7 +41,7 @@ grunt.initConfig({
   "mozilla-cfx-xpi": {
     'stable': {
       options: {
-        "mozilla-addon-sdk": "1.14",
+        "mozilla-addon-sdk": "1_14",
         extension_dir: "ff_extension",
         dist_dir: "tmp/dist-stable"
       }
@@ -53,6 +53,22 @@ grunt.initConfig({
         dist_dir: "tmp/dist-experimental"
       }
     },
+  },
+  "mozilla-cfx": {
+    'run_stable': {
+      options: {
+        "mozilla-addon-sdk": "1_14",
+        extension_dir: "ff_extension",
+        command: "run"
+      }
+    },
+    'run_experimental': {
+      options: {
+        "mozilla-addon-sdk": "master",
+        extension_dir: "ff_extension",
+        command: "run"
+      }
+    }
   }
 });
 ```
@@ -62,14 +78,14 @@ Custom cfx command could be defined using a section named `mozilla-cfx`:
 ```js
 grunt.initConfig({
   "mozilla-addon-sdk": {
-    "1.14": {
+    "1_14": {
       ...
     }
   },
   "mozilla-cfx": {
     custom_command: {
       options: {
-        "mozilla-addon-sdk": "1.14",
+        "mozilla-addon-sdk": "1_14",
         extension_dir: "ff_extension",
         command: "run",
         arguments: "-b /usr/bin/firefox-nightly -p /tmp/PROFILE_REUSED"
@@ -189,5 +205,6 @@ Done, without errors.
 
 ## Release History
 
+- 0.3.0 - support multiple addon-sdk (NOTE: config syntax changes)
 - 0.2.0 - added windows support and custom cfx command using 'mozilla-cfx' grunt multi-task
 - 0.1.0 - initial release (download and xpi sub-tasks)
