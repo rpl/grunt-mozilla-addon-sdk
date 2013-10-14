@@ -150,7 +150,7 @@ A string value that is used as the path where the generated addon xpi should be 
 ### mozilla-cfx
 
 "mozilla-addon-sdk" is a grunt multi-task which run cfx command line tool on a extension
-directory using using the available addon-sdk revisions.
+directory using the available addon-sdk revisions.
 
 #### "mozilla-addon-sdk"
 Type: `String`
@@ -182,7 +182,7 @@ A string value that is used to pass arguments to the cfx command to run.
 
 ```
 $ grunt mozilla-addon-sdk
-Running "mozilla-addon-sdk:1.14" (mozilla-addon-sdk) task
+Running "mozilla-addon-sdk:1_14" (mozilla-addon-sdk) task
 Downloading: https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack/addon-sdk-1.14.tar.gz
 
 Running "mozilla-addon-sdk:master" (mozilla-addon-sdk) task
