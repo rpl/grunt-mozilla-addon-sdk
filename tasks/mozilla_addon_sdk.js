@@ -86,7 +86,18 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args) {
       ext_dir,
       cfx_cmd
     ];
-  if (cfx_args) args.push(cfx_args);
+
+  if (cfx_args) {
+    args.push(cfx_args);
+  }
+
+  if (process.env["FIREFOX_BIN"]) {
+    args.push("-b " + process.env["FIREFOX_BIN"]);
+  }
+
+  if (process.env["FIREFOX_PROFILE"]) {
+    args.push("-p " + process.env["FIREFOX_PROFILE"]);
+  }
 
   grunt.util.spawn({
     cmd: xpi_script,
