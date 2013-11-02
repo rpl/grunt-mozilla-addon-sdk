@@ -95,6 +95,8 @@ grunt.initConfig({
 })
 ```
 
+**NOTE**: all tasks use `FIREFOX_BIN` and `FIREFOX_PROFILE` environment variables, if defined, to customize the Firefox binary and Firefox profile dir used to run or test the extension.
+
 ### mozilla-addon-sdk
 
 "mozilla-addon-sdk" is a grunt multi-task which supports the following task options
@@ -205,6 +207,7 @@ Done, without errors.
 
 ## Release History
 
+- 0.3.1 - use `FIREFOX_BIN` and `FIREFOX_PROFILE` environment variables in `cfx` helper
 - 0.3.0 - support multiple addon-sdk (NOTE: config syntax changes)
 - 0.2.0 - added windows support and custom cfx command using 'mozilla-cfx' grunt multi-task
 - 0.1.0 - initial release (download and xpi sub-tasks)
