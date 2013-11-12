@@ -41,6 +41,12 @@ module.exports = function(grunt) {
           github: true,
           // github_user: "mozilla" // default
         }
+      },
+      '1_14_spacename': {
+        options: {
+          revision: "1.14",
+          dest_dir: "tmp/Mozilla Addon SDK"
+        }
       }
     },
 
@@ -51,6 +57,13 @@ module.exports = function(grunt) {
           "mozilla-addon-sdk": "1_14",
           extension_dir: "test/fixtures/test-addon",
           dist_dir: "tmp/dist"
+        }
+      },
+      'test_space_names': {
+        options: {
+          "mozilla-addon-sdk": "1_14_spacename",
+          extension_dir: "test/fixtures/test addon dirname with spaces",
+          dist_dir: "tmp/dist spacename"
         }
       }
     },
