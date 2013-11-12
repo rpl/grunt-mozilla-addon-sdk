@@ -1,6 +1,6 @@
-cd %1
+cd "%1"
 call bin\activate
-cd %2
+cd "%2"
 SET COMMAND=%3
 
 SHIFT
