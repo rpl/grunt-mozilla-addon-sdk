@@ -65,7 +65,8 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args) {
                              get_downloaded_dirname(download_options));
   var completed = Q.defer();
   var scriptFilename = process.platform.match(/^win/) ? 'cfx.bat' : 'cfx.sh';
-  var xpi_script = path.resolve(__dirname, '..', 'scripts', scriptFilename);
+  var xpi_script = path.relative(process.cwd(),
+                                 path.resolve(__dirname, '..', 'scripts', scriptFilename));
 
   var package_json = path.resolve(ext_dir, "package.json");
   var error;
