@@ -207,6 +207,7 @@ Done, without errors.
 
 ## Release History
 
+- 0.3.2 - fix issues handling space chars in the paths
 - 0.3.1 - use `FIREFOX_BIN` and `FIREFOX_PROFILE` environment variables in `cfx` helper
 - 0.3.0 - support multiple addon-sdk (NOTE: config syntax changes)
 - 0.2.0 - added windows support and custom cfx command using 'mozilla-cfx' grunt multi-task
