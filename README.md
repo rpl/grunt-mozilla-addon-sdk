@@ -43,7 +43,8 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "1_14",
         extension_dir: "ff_extension",
-        dist_dir: "tmp/dist-stable"
+        dist_dir: "tmp/dist-stable",
+        arguments: "--strip-sdk" // builds smaller xpis
       }
     },
     'experimental': {
