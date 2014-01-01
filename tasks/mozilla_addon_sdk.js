@@ -127,6 +127,11 @@ function xpi(grunt, options) {
   var cfx_args = options.arguments;
   var completed = Q.defer();
 
+  // pass --strip-sdk by default
+  if (options.strip_sdk !== false) {
+    cfx_args = "--strip-sdk " + cfx_args;
+  }
+
   grunt.log.writeln("Creating dist dir '" + dist_dir + "'...");
 
   grunt.file.mkdir(dist_dir);
