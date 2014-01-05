@@ -33,7 +33,7 @@ function get_downloaded_dirname(download_options) {
   var type = get_download_type(download_options);
   var suffix = "";
 
-  if (type == "github") {
+  if (type === "github") {
     var user = download_options.github_user ? download_options.github_user : DEFAULT_GITHUB_USER;
     suffix = "-" + user;
   }
@@ -45,14 +45,11 @@ function get_download_url(download_options) {
   switch (get_download_type(download_options)) {
   case "custom":
     return download_options.download_url;
-    break;
   case "github":
     return ["https://github.com", download_options.github_user || DEFAULT_GITHUB_USER,
             "addon-sdk", "archive", download_options.revision].join("/") + ".tar.gz";
-    break;
   case "official":
     return [BASE_OFFICIAL_URL, "addon-sdk-" + download_options.revision].join("/") + ".tar.gz";
-    break;
   }
 
   return null;
@@ -223,8 +220,8 @@ module.exports = function(grunt) {
     download(grunt, options).
       then(done).
       catch(function (error) {
-        grunt.fail.warn('There was an error downloading mozilla-addon-sdk ' + this.target + '.'
-                        + error);
+        grunt.fail.warn('There was an error downloading mozilla-addon-sdk ' +
+                        this.target + '.' + error);
         done();
       });
   });
