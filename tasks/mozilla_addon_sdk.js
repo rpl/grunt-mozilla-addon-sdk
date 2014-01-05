@@ -64,7 +64,7 @@ function get_download_url(download_options) {
   return null;
 }
 
-function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args) {
+function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
   var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
   var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
   var sdk_dir = path.resolve(dest_dir,
@@ -106,9 +106,16 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args) {
     args.push("-p " + process.env["FIREFOX_PROFILE"]);
   }
 
+  var spawn_opts = {};
+
+  if (grunt.option("debug") ||
+      (!!task_options && task_options.pipe_output)) {
+    spawn_opts.stdio = 'inherit';
+  }
+
   grunt.util.spawn({
     cmd: xpi_script,
-    opts: grunt.option("debug") ? {stdio: 'inherit'} : {},
+    opts: spawn_opts,
     args: args,
   }, function (error, result, code) {
     if (error) {
@@ -141,7 +148,7 @@ function xpi(grunt, options) {
 
   grunt.log.writeln("Creating xpi...");
 
-  cfx(grunt, options['mozilla-addon-sdk'], ext_dir, "xpi", cfx_args).
+  cfx(grunt, options['mozilla-addon-sdk'], ext_dir, "xpi", cfx_args, options).
     then(function () {
       var xpi_files = grunt.file.expand(options.extension_dir + "/*.xpi");
 
@@ -282,7 +289,7 @@ module.exports = function(grunt) {
     grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));
 
     cfx(grunt, options['mozilla-addon-sdk'], path.resolve(options.extension_dir),
-        options.command, options.arguments).
+        options.command, options.arguments, options).
       then(done).
       catch(function (error) {
         grunt.fail.warn('There was an error running mozilla-cfx. ' + error);

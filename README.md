@@ -51,7 +51,7 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "latest",
         extension_dir: "ff_extension",
-        dist_dir: "tmp/dist-stable",
+        dist_dir: "tmp/dist-stable"
       }
     },
     'experimental': {
@@ -75,7 +75,8 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "master",
         extension_dir: "ff_extension",
-        command: "run"
+        command: "run",
+        pipe_output: true
       }
     }
   }
@@ -174,6 +175,12 @@ NOTE:
 - 'strip_sdk == true' (default) is like "cfx --strip-sdk REST_ARGS"
 - 'strip_sdk == false' is like "cfx --no-strip-xpi  --force-use-bundled-sdk REST_ARGS"
 
+#### pipe_output
+Type `Bool`
+Default value: `null`
+
+A boolean value that is used to enable/disable print cfx commands output
+
 ### mozilla-cfx
 
 "mozilla-addon-sdk" is a grunt multi-task which run cfx command line tool on a extension
@@ -202,6 +209,12 @@ A string value that is used as the cfx command to run.
 Type: `String`
 
 A string value that is used to pass arguments to the cfx command to run.
+
+#### pipe_output
+Type `Bool`
+Default value: `null`
+
+A boolean value that is used to enable/disable print cfx commands output
 
 ### Usage Examples
 
