@@ -51,7 +51,8 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "master",
         extension_dir: "ff_extension",
-        dist_dir: "tmp/dist-experimental"
+        dist_dir: "tmp/dist-experimental",
+        pipe_output: true
       }
     },
   },
@@ -67,7 +68,8 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "master",
         extension_dir: "ff_extension",
-        command: "run"
+        command: "run",
+        pipe_output: true
       }
     }
   }
@@ -88,7 +90,8 @@ grunt.initConfig({
       options: {
         "mozilla-addon-sdk": "1_14",
         extension_dir: "ff_extension",
-        command: "run",
+        command: "test",
+        pipe_output: true,
         arguments: "-b /usr/bin/firefox-nightly -p /tmp/PROFILE_REUSED"
       }
     }
@@ -150,6 +153,12 @@ Default value: `null`
 
 A string value that is used as the path where the generated addon xpi should be moved.
 
+#### pipe_output
+Type `Bool`
+Default value: `null`
+
+A boolean value that is used to enable/disable print cfx commands output
+
 ### mozilla-cfx
 
 "mozilla-addon-sdk" is a grunt multi-task which run cfx command line tool on a extension
@@ -178,6 +187,12 @@ A string value that is used as the cfx command to run.
 Type: `String`
 
 A string value that is used to pass arguments to the cfx command to run.
+
+#### pipe_output
+Type `Bool`
+Default value: `null`
+
+A boolean value that is used to enable/disable print cfx commands output
 
 ### Usage Examples
 
