@@ -27,7 +27,8 @@ grunt.initConfig({
   "mozilla-addon-sdk": {
     '1_14': {
       options: {
-        revision: "1.14"
+        revision: "1.14",
+        dest_dir: "addon-sdk-stable"
       }
     },
     'master': {
@@ -35,6 +36,7 @@ grunt.initConfig({
         revision: "master",
         github: true,
         // github_user: "mozilla" // default value
+        // dest_dir: "tmp"  //  default value
       }
     }
   },
@@ -125,6 +127,12 @@ Default value: `mozilla`
 
 A string value used as Github User for addon-sdk github archive to downloads, it could
 be used to use a different github fork of the original mozilla addon-sdk repo.
+
+#### dest_dir
+Type: `String`
+Default value: `tmp`
+
+A string value used as the path where the github repo of this addon-sdk will be cloned.
 
 ### mozilla-cfx-xpi
 
