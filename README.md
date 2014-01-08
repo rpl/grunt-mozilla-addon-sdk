@@ -28,7 +28,7 @@ grunt.initConfig({
     '1_14': {
       options: {
         revision: "1.14",
-        dest_dir: "addon-sdk-stable"
+        dest_dir: "vendor/mozilla-addon-sdk"
       }
     },
     'master': {
@@ -36,7 +36,7 @@ grunt.initConfig({
         revision: "master",
         github: true,
         // github_user: "mozilla" // default value
-        // dest_dir: "tmp"  //  default value
+        // dest_dir: "tmp/mozilla-addon-sdk"  //  default value
       }
     }
   },
@@ -130,7 +130,7 @@ be used to use a different github fork of the original mozilla addon-sdk repo.
 
 #### dest_dir
 Type: `String`
-Default value: `tmp`
+Default value: `tmp/mozilla-addon-sdk`
 
 A string value used as the path where the github repo of this addon-sdk will be cloned.
 
