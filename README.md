@@ -28,7 +28,7 @@ grunt.initConfig({
     '1_14': {
       options: {
         revision: "1.14",
-        dest_dir: "vendor/mozilla-addon-sdk"
+        dest_dir: "build_tools/"
       }
     },
     'master': {
