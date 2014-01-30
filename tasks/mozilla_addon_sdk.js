@@ -12,10 +12,12 @@ var path = require('path'),
     fs = require('fs'),
     request = require('request'),
     Q = require('q'),
-    targz = require('tar.gz'),
+    tar = require('tar'),
+    zlib = require('zlib'),
     mv = require('mv');
 
 var BASE_OFFICIAL_URL = "https://ftp.mozilla.org/pub/mozilla.org/labs/jetpack",
+    DEFAULT_OFFICIAL_REVISION = "latest",
     DEFAULT_GITHUB_USER = "mozilla",
     DEFAULT_DEST_DIR = path.join("tmp", "mozilla-addon-sdk");
 
@@ -31,14 +33,19 @@ function get_download_type(download_options) {
 
 function get_downloaded_dirname(download_options) {
   var type = get_download_type(download_options);
-  var suffix = "";
+  var suffix = "",
+      revision = download_options.revision;
 
   if (type === "github") {
     var user = download_options.github_user ? download_options.github_user : DEFAULT_GITHUB_USER;
     suffix = "-" + user;
   }
 
-  return "addon-sdk-" + download_options.revision + "-" + type + suffix;
+  if (type === "official") {
+    revision = revision || DEFAULT_OFFICIAL_REVISION;
+  }
+
+  return "addon-sdk-" + revision + "-" + type + suffix;
 }
 
 function get_download_url(download_options) {
@@ -49,7 +56,9 @@ function get_download_url(download_options) {
     return ["https://github.com", download_options.github_user || DEFAULT_GITHUB_USER,
             "addon-sdk", "archive", download_options.revision].join("/") + ".tar.gz";
   case "official":
-    return [BASE_OFFICIAL_URL, "addon-sdk-" + download_options.revision].join("/") + ".tar.gz";
+    return [BASE_OFFICIAL_URL,
+            "addon-sdk-" + (download_options.revision || DEFAULT_OFFICIAL_REVISION)
+           ].join("/") + ".tar.gz";
   }
 
   return null;
@@ -176,17 +185,22 @@ function download(grunt, options) {
   grunt.log.writeln('Downloading: ' + downloadUrl);
 
   destFileStream.on('close', function() {
-    new targz().extract(destFilePath, dest_dir, function (error) {
-      grunt.file.delete(destFilePath);
-      if (error) {
-        grunt.log.error(error);
-        grunt.fail.warn('There was an error while extracting.');
-        completed.reject(error);
-      } else {
-        mv(path.resolve(dest_dir, "addon-sdk-" + options.revision),
-                      path.resolve(dest_dir, downloaded_dirname), completed.resolve);
-      }
-    });
+    var zipReadStream = fs.createReadStream(destFilePath);
+    var rootDir;
+    zipReadStream.
+      pipe(zlib.createGunzip()).
+      pipe(tar.Extract({
+        path: path.resolve(dest_dir, downloaded_dirname),
+        strip: 1
+      })).
+      on("error", function(err) {
+        grunt.log.error(err);
+        grunt.fail.warn('There was an error while extracting: ' + err);
+        completed.rejected(err);
+      }).
+      on("end", function() {
+        completed.resolve(path.resolve(dest_dir, downloaded_dirname));
+      });
   });
 
   destFileStream.on('error', function(error) {
@@ -215,7 +229,9 @@ module.exports = function(grunt) {
       grunt.fail.warn("ERROR: target name '"  + this.target + "' contains a '.' in its name.");
     }
 
-    grunt.config.requires(["mozilla-addon-sdk",this.target,"options","revision"].join('.'));
+    if (options.github) {
+      grunt.config.requires(["mozilla-addon-sdk",this.target,"options","revision"].join('.'));
+    }
 
     download(grunt, options).
       then(done).

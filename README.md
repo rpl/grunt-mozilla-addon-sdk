@@ -25,6 +25,12 @@ In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data
 ```js
 grunt.initConfig({
   "mozilla-addon-sdk": {
+    'latest': {
+      options: {
+        // revision: "latest", // default official revision
+        dest_dir: "build_tools/"
+      }
+    },
     '1_14': {
       options: {
         revision: "1.14",
@@ -43,7 +49,7 @@ grunt.initConfig({
   "mozilla-cfx-xpi": {
     'stable': {
       options: {
-        "mozilla-addon-sdk": "1_14",
+        "mozilla-addon-sdk": "latest",
         extension_dir: "ff_extension",
         dist_dir: "tmp/dist-stable",
         arguments: "--strip-sdk" // builds smaller xpis

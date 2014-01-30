@@ -45,8 +45,8 @@
   "dependencies": {
     "request": "~2.27.0",
     "q": "~0.9.7",
-    "tar.gz": "~0.1.1",
-    "mv": "~1.0.0"
+    "mv": "~1.0.0",
+    "tar": "~0.1.19"
   },
   "keywords": [
     "gruntplugin"
