@@ -1,0 +1,5 @@
+{
+  "name": "test-addon-external-packages", 
+  "id": "test-addon-external-packages@alcacoop.it",
+  "dependencies": [ "menuitems", "vold-utils" ]
+}
