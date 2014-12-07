@@ -136,7 +136,7 @@ A string value used as the path where the github repo of this addon-sdk will be 
 
 ### mozilla-cfx-xpi
 
-"mozilla-addon-sdk" is a grunt multi-task which builds addon xpi archives using the
+"mozilla-cfx-xpi" is a grunt multi-task which builds addon xpi archives using the
 available addon-sdk revisions.
 
 #### "mozilla-addon-sdk"
@@ -160,7 +160,7 @@ A string value that is used as the path where the generated addon xpi should be 
 
 ### mozilla-cfx
 
-"mozilla-addon-sdk" is a grunt multi-task which run cfx command line tool on a extension
+"mozilla-cfx" is a grunt multi-task which run cfx command line tool on a extension
 directory using the available addon-sdk revisions.
 
 #### "mozilla-addon-sdk"
