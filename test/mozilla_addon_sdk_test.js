@@ -32,7 +32,7 @@ exports.mozilla_addon_sdk = {
     test.expect(6);
 
     var addon_sdk_dirs = [
-      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-1.14-official"),
+      path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-latest-official"),
       path.resolve("tmp", "mozilla-addon-sdk", "addon-sdk-master-github-mozilla")
     ];
 
