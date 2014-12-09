@@ -8,7 +8,7 @@ exports.mozilla_addon_sdk = {
     test.expect(3);
 
     var addon_sdk_dirs = [
-      path.resolve("tmp", "Mozilla Addon SDK", "addon-sdk-1.14-official"),
+      path.resolve("tmp", "Mozilla Addon SDK", "addon-sdk-latest-official"),
     ];
 
     addon_sdk_dirs.forEach(function(addon_sdk_dir) {
