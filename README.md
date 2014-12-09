@@ -168,7 +168,11 @@ A string value that is used as the path where the generated addon xpi should be 
 Type: `Bool`
 Default value: `true`
 
-A boolean value that is used to configure if addon-sdk bundled modules will be stripped from the xpi.
+A boolean value that is used to configure if addon-sdk bundled modules will be stripped from or bundled in the xpi.
+
+NOTE:
+- 'strip_sdk == true' (default) is like "cfx --strip-sdk REST_ARGS"
+- 'strip_sdk == false' is like "cfx --no-strip-xpi  --force-use-bundled-sdk REST_ARGS"
 
 ### mozilla-cfx
 
