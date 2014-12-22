@@ -76,6 +76,7 @@ module.exports = function(grunt) {
           "mozilla-addon-sdk": "latest",
           extension_dir: "test/fixtures/test-addon",
           command: 'test',
+          pipe_output: true,
           // arguments: '-b /usr/local/bin/firefox-nightly -p /tmp/PROFILE_REUSED'
         }
       }
