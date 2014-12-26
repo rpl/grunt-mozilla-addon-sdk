@@ -20,7 +20,7 @@ grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
 ## The "mozilla-addon-sdk" tasks
 
 ### Overview
-In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data object passed into `grunt.initConfig()` to define a Mozilla Addon SDK to download and use.
+In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data object passed into `grunt.initConfig()` to define a Mozilla Addon SDK to download and use, a section named `mozilla-cfx-xpi` to define the xpi building tasks and a section named `mozilla-cfx`` to define arbitrary cfx commands to run (e.g. `cfx run` to try your extension in a temporary profile and `cfx test` to run your test cases)
 
 ```js
 grunt.initConfig({
@@ -146,7 +146,7 @@ A string value used as the path where the github repo of this addon-sdk will be 
 "mozilla-cfx-xpi" is a grunt multi-task which builds addon xpi archives using the
 available addon-sdk revisions.
 
-#### "mozilla-addon-sdk"
+#### mozilla-addon-sdk
 Type: `String`
 Default value: `null`
 
@@ -245,6 +245,7 @@ Done, without errors.
 
 ## Release History
 
+- 0.4.0 - download the latest stable released addon-sdk (by default), strip sdk from xpi by default (**strip_sdk** option), pipe commands output (**pipe_output** option)
 - 0.3.2 - fix issues handling space chars in the paths
 - 0.3.1 - use `FIREFOX_BIN` and `FIREFOX_PROFILE` environment variables in `cfx` helper
 - 0.3.0 - support multiple addon-sdk (NOTE: config syntax changes)
