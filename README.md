@@ -181,6 +181,11 @@ Default value: `null`
 
 A boolean value that is used to enable/disable print cfx commands output
 
+#### arguments
+Type: `String`
+
+A string value that is used to pass arguments to the cfx command to run.
+
 ### mozilla-cfx
 
 "mozilla-cfx" is a grunt multi-task which run cfx command line tool on a extension
