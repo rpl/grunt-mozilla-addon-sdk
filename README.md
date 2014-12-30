@@ -20,7 +20,7 @@ grunt.loadNpmTasks('grunt-mozilla-addon-sdk');
 ## The "mozilla-addon-sdk" tasks
 
 ### Overview
-In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data object passed into `grunt.initConfig()` to define a Mozilla Addon SDK to download and use, a section named `mozilla-cfx-xpi` to define the xpi building tasks and a section named `mozilla-cfx`` to define arbitrary cfx commands to run (e.g. `cfx run` to try your extension in a temporary profile and `cfx test` to run your test cases)
+In your project's Gruntfile, add a section named `mozilla-addon-sdk` to the data object passed into `grunt.initConfig()` to define a Mozilla Addon SDK to download and use, a section named `mozilla-cfx-xpi` to define the xpi building tasks and a section named `mozilla-cfx` to define arbitrary cfx commands to run (e.g. `cfx run` to try your extension in a temporary profile and `cfx test` to run your test cases)
 
 ```js
 grunt.initConfig({
