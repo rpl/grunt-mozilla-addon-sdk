@@ -64,6 +64,28 @@ function get_download_url(download_options) {
   return null;
 }
 
+// Adjust argument array for command line usage, 
+// to have exactly one parameter per array entry
+function prepareArgs(args){
+  if (typeof args !== 'string'){
+    args = args.join(' ');
+  }
+
+  // split arguments into array
+  // considering "...", '...' and \<space>.
+  var regex = /((?:[^\s"']|\\\s)+)|("[^"]*")|('[^']*')/g;
+  var match = null;
+  var result = [];
+  while (match = regex.exec(args)) {
+    var arg = match[1] || match[2] || match[3];
+    if (arg){
+      result.push(arg);
+    }
+  }
+
+  return result;
+}
+
 function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
   var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
   var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
@@ -95,15 +117,17 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
     ];
 
   if (cfx_args) {
-    args.push(cfx_args);
+    args = args.concat(prepareArgs(cfx_args));
   }
 
   if (process.env["FIREFOX_BIN"]) {
-    args.push("-b " + process.env["FIREFOX_BIN"]);
+    args.push("-b ");
+    args.push(process.env["FIREFOX_BIN"]);
   }
 
   if (process.env["FIREFOX_PROFILE"]) {
-    args.push("-p " + process.env["FIREFOX_PROFILE"]);
+    args.push("-p ");
+    args.push(process.env["FIREFOX_PROFILE"]);
   }
 
   var spawn_opts = {};
@@ -136,7 +160,7 @@ function xpi(grunt, options) {
 
   // pass --strip-sdk by default
   if (options.strip_sdk !== false) {
-    cfx_args = "--strip-sdk " + cfx_args;
+    cfx_args = "--strip-sdk " + (cfx_args || ""); // no "undefined" string here
   } else {
   // on "strip_sdk == false" bundle sdk and force use of the bundled modules
     cfx_args = "--no-strip-xpi  --force-use-bundled-sdk " + cfx_args;
