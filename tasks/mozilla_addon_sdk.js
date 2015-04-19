@@ -64,6 +64,24 @@ function get_download_url(download_options) {
   return null;
 }
 
+// Convert old style string arguments task option into the new array style form
+function convertStringArgumentsToArray(args) {
+  // split arguments into array
+  // considering "...", '...' and \<space>.
+  var regex = /((?:[^\s"']|\\\s)+)|("[^"]*")|('[^']*')/g;
+  var match = null;
+  var result = [];
+
+  while (match = regex.exec(args)) {
+    var arg = match[1] || match[2] || match[3];
+    if (arg){
+      result.push(arg);
+    }
+  }
+
+  return result;
+}
+
 function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
   var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
   var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
