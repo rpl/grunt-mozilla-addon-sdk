@@ -155,12 +155,12 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
 function xpi(grunt, options) {
   var ext_dir = path.resolve(options.extension_dir);
   var dist_dir = path.resolve(options.dist_dir);
-  var cfx_args = options.arguments;
+  var cfx_args = options.arguments || ""; // no "undefined" string here
   var completed = Q.defer();
 
   // pass --strip-sdk by default
   if (options.strip_sdk !== false) {
-    cfx_args = "--strip-sdk " + (cfx_args || ""); // no "undefined" string here
+    cfx_args = "--strip-sdk " + cfx_args;
   } else {
   // on "strip_sdk == false" bundle sdk and force use of the bundled modules
     cfx_args = "--no-strip-xpi  --force-use-bundled-sdk " + cfx_args;
