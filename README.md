@@ -98,7 +98,7 @@ grunt.initConfig({
         "mozilla-addon-sdk": "1_14",
         extension_dir: "ff_extension",
         command: "run",
-        arguments: "-b /usr/bin/firefox-nightly -p /tmp/PROFILE_REUSED"
+        arguments: ["-b", "/usr/bin/firefox-nightly", "-p", "/tmp/PROFILE_REUSED"]
       }
     }
   }
@@ -182,9 +182,9 @@ Default value: `null`
 A boolean value that is used to enable/disable print cfx commands output
 
 #### arguments
-Type: `String`
+Type: `Array`
 
-A string value that is used to pass arguments to the cfx command to run.
+An array of string values that is used to pass arguments to the cfx command to run.
 
 ### mozilla-cfx
 
@@ -211,9 +211,9 @@ Default value: `null`
 A string value that is used as the cfx command to run.
 
 #### arguments
-Type: `String`
+Type: `Array`
 
-A string value that is used to pass arguments to the cfx command to run.
+An array of string values that is used to pass arguments to the cfx command to run.
 
 #### pipe_output
 Type `Bool`
