@@ -9,9 +9,10 @@
     "url": "http://ubik.cc"
   },
   "contributors": [
-    {
-      "name": "Oleg Shevchenko (https://github.com/olsh)"
-    }
+    { "name": "Oleg Shevchenko (https://github.com/olsh)" },
+    { "name": "Jeff Griffiths (https://github.com/canuckistani)"} ,
+    { "name": "Joscha Feth (https://github.com/joscha)" },
+    { "name": "Markus Bauer (https://github.com/MarkusBauer)" }
   ],
   "repository": {
     "type": "git",
