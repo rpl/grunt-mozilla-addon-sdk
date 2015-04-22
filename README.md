@@ -215,6 +215,24 @@ Type: `Array`
 
 An array of string values that is used to pass arguments to the cfx command to run.
 
+Example:
+
+```js
+  options: {
+    ...
+    arguments: ["-b", "/usr/bin/firefox-nightly", "-p", "/tmp/PROFILE_REUSED"]
+  }
+```
+
+NOTE:
+
+The previous string format is still accepted and auto-converted on the fly
+(and grunt will print a warning message):
+```
+Deprecating: 'arguments' in the mozilla-cfx task options should be converted into an array
+mozilla-cfx-xpi.options.arguments autoconverted: ["-p","tmp/reused_profile"]
+```
+
 #### pipe_output
 Type `Bool`
 Default value: `null`
@@ -250,6 +268,7 @@ Done, without errors.
 
 ## Release History
 
+- 0.5.0 - mozilla-cfx and mozilla-cfx-xpi options.arguments in array format
 - 0.4.0 - download the latest stable released addon-sdk (by default), strip sdk from xpi by default (**strip_sdk** option), pipe commands output (**pipe_output** option)
 - 0.3.2 - fix issues handling space chars in the paths
 - 0.3.1 - use `FIREFOX_BIN` and `FIREFOX_PROFILE` environment variables in `cfx` helper
