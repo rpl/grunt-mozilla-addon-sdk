@@ -82,6 +82,16 @@ function convertStringArgumentsToArray(args) {
   return result;
 }
 
+function handleDeprecatedOptions(grunt, options, taskname) {
+  if (options.arguments && typeof options.arguments === "string") {
+    grunt.log.writeln("Deprecating: 'arguments' in the mozilla-cfx task options should be converted into an array");
+    options.arguments = convertStringArgumentsToArray(options.arguments);
+    grunt.log.writeln(taskname + ".options.arguments autoconverted: " + JSON.stringify(options.arguments));
+  }
+
+  return options;
+}
+
 function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
   var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
   var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
@@ -130,8 +140,6 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
       (!!task_options && task_options.pipe_output)) {
     spawn_opts.stdio = 'inherit';
   }
-
-  console.log("CFX ARGS", args);
 
   grunt.util.spawn({
     cmd: xpi_script,
@@ -289,10 +297,7 @@ module.exports = function(grunt) {
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","dist_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","mozilla-addon-sdk"].join('.'));
 
-    if (options.arguments && !Array.isArray(options.arguments)) {
-      grunt.fail.fatal("Error: 'arguments' in the mozilla-cfx task options must be an array");
-      return;
-    }
+    options = handleDeprecatedOptions(grunt, options, 'mozilla-cfx-xpi');
 
     xpi(grunt, options).
       then(done).
@@ -313,9 +318,7 @@ module.exports = function(grunt) {
     grunt.config.requires(["mozilla-cfx",this.target,"options","extension_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));
 
-    if (options.arguments && !Array.isArray(options.arguments)) {
-      grunt.fail.fatal("Error: 'arguments' in the mozilla-cfx task options must be an array");
-    }
+    options = handleDeprecatedOptions(grunt, options, 'mozilla-cfx');
 
     cfx(grunt, options['mozilla-addon-sdk'], path.resolve(options.extension_dir),
         options.command, options.arguments, options).

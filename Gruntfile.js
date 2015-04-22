@@ -81,6 +81,14 @@ module.exports = function(grunt) {
           dist_dir: "tmp/dist_bundled_sdk",
           arguments: ["-p", "tmp/reused_profile"]
         }
+      },
+      'test_autoconverted_string_arguments': {
+        options: {
+          "mozilla-addon-sdk": "latest",
+          extension_dir: "test/fixtures/test-addon",
+          dist_dir: "tmp/dist_bundled_sdk",
+          arguments: "-p tmp/reused_profile"
+        }
       }
     },
 
