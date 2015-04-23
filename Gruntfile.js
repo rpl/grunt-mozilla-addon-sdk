@@ -56,7 +56,7 @@ module.exports = function(grunt) {
         options: {
           "mozilla-addon-sdk": "latest",
           extension_dir: "test/fixtures/test-addon",
-          dist_dir: "tmp/dist" 
+          dist_dir: "tmp/dist"
         }
       },
       'test_space_names': {
@@ -72,6 +72,22 @@ module.exports = function(grunt) {
           extension_dir: "test/fixtures/test-addon",
           dist_dir: "tmp/dist_bundled_sdk",
           strip_sdk: false
+        }
+      },
+      'test_arguments': {
+        options: {
+          "mozilla-addon-sdk": "latest",
+          extension_dir: "test/fixtures/test-addon",
+          dist_dir: "tmp/dist_bundled_sdk",
+          arguments: ["-p", "tmp/reused_profile"]
+        }
+      },
+      'test_autoconverted_string_arguments': {
+        options: {
+          "mozilla-addon-sdk": "latest",
+          extension_dir: "test/fixtures/test-addon",
+          dist_dir: "tmp/dist_bundled_sdk",
+          arguments: "-p tmp/reused_profile"
         }
       }
     },

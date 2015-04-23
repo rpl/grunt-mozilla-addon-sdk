@@ -64,6 +64,34 @@ function get_download_url(download_options) {
   return null;
 }
 
+// Convert old style string arguments task option into the new array style form
+function convertStringArgumentsToArray(args) {
+  // split arguments into array
+  // considering "...", '...' and \<space>.
+  var regex = /((?:[^\s"']|\\\s)+)|("[^"]*")|('[^']*')/g;
+  var match = null;
+  var result = [];
+
+  while (match = regex.exec(args)) {
+    var arg = match[1] || match[2] || match[3];
+    if (arg){
+      result.push(arg);
+    }
+  }
+
+  return result;
+}
+
+function handleDeprecatedOptions(grunt, options, taskname) {
+  if (options.arguments && typeof options.arguments === "string") {
+    grunt.log.writeln("Deprecating: 'arguments' in the mozilla-cfx task options should be converted into an array");
+    options.arguments = convertStringArgumentsToArray(options.arguments);
+    grunt.log.writeln(taskname + ".options.arguments autoconverted: " + JSON.stringify(options.arguments));
+  }
+
+  return options;
+}
+
 function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
   var download_options = grunt.config('mozilla-addon-sdk')[addon_sdk].options;
   var dest_dir = download_options.dest_dir || DEFAULT_DEST_DIR;
@@ -95,7 +123,7 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
     ];
 
   if (cfx_args) {
-    args.push(cfx_args);
+    args = args.concat(cfx_args);
   }
 
   if (process.env["FIREFOX_BIN"]) {
@@ -131,15 +159,15 @@ function cfx(grunt, addon_sdk, ext_dir, cfx_cmd, cfx_args, task_options) {
 function xpi(grunt, options) {
   var ext_dir = path.resolve(options.extension_dir);
   var dist_dir = path.resolve(options.dist_dir);
-  var cfx_args = options.arguments;
+  var cfx_args = options.arguments || [];
   var completed = Q.defer();
 
   // pass --strip-sdk by default
   if (options.strip_sdk !== false) {
-    cfx_args = "--strip-sdk " + cfx_args;
+    cfx_args = cfx_args.concat(["--strip-sdk"]);
   } else {
   // on "strip_sdk == false" bundle sdk and force use of the bundled modules
-    cfx_args = "--no-strip-xpi  --force-use-bundled-sdk " + cfx_args;
+    cfx_args = cfx_args.concat(["--no-strip-xpi", "--force-use-bundled-sdk"]);
   }
 
   grunt.log.writeln("Creating dist dir '" + dist_dir + "'...");
@@ -269,6 +297,8 @@ module.exports = function(grunt) {
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","dist_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx-xpi",this.target,"options","mozilla-addon-sdk"].join('.'));
 
+    options = handleDeprecatedOptions(grunt, options, 'mozilla-cfx-xpi');
+
     xpi(grunt, options).
       then(done).
       catch(function (error) {
@@ -287,6 +317,8 @@ module.exports = function(grunt) {
 
     grunt.config.requires(["mozilla-cfx",this.target,"options","extension_dir"].join('.'));
     grunt.config.requires(["mozilla-cfx",this.target,"options","command"].join('.'));
+
+    options = handleDeprecatedOptions(grunt, options, 'mozilla-cfx');
 
     cfx(grunt, options['mozilla-addon-sdk'], path.resolve(options.extension_dir),
         options.command, options.arguments, options).
