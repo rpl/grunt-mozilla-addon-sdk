@@ -1,3 +1,9 @@
+# OBSOLETE: use [grunt-jpm](https://github.com/rpl/grunt-jpm) instead
+
+Firefox 44+ no longer accepts add-ons built with cfx, and jpm should be used in its place:
+
+to integrate xpi building and run into a Gruntfile, port it to [grunt-jpm](http://github.com/rpl/grunt-jpm).
+
 # grunt-mozilla-addon-sdk
 
 > Download and Run Mozilla Addon SDK
