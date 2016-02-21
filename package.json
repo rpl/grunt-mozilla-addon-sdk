@@ -9,10 +9,18 @@
     "url": "http://ubik.cc"
   },
   "contributors": [
-    { "name": "Oleg Shevchenko (https://github.com/olsh)" },
-    { "name": "Jeff Griffiths (https://github.com/canuckistani)"} ,
-    { "name": "Joscha Feth (https://github.com/joscha)" },
-    { "name": "Markus Bauer (https://github.com/MarkusBauer)" }
+    {
+      "name": "Oleg Shevchenko (https://github.com/olsh)"
+    },
+    {
+      "name": "Jeff Griffiths (https://github.com/canuckistani)"
+    },
+    {
+      "name": "Joscha Feth (https://github.com/joscha)"
+    },
+    {
+      "name": "Markus Bauer (https://github.com/MarkusBauer)"
+    }
   ],
   "repository": {
     "type": "git",
@@ -41,7 +49,7 @@
     "grunt": "~0.4.1"
   },
   "peerDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": ">=0.4.0"
   },
   "dependencies": {
     "request": "~2.27.0",
